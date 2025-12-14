@@ -60,7 +60,7 @@ base_url = "https://rickandmortyapi.com/api"
 
 def read(path, page=1):
     full_url = f"{base_url}{path}?page={page}"
-    print(f"fetching {full_url}")
+    # print(f"fetching {full_url}")
     try:
         response = requests.get(full_url)
         if response.status_code == 404:
@@ -73,6 +73,7 @@ def read(path, page=1):
 
 
 def location():
+    print("fetching location pages")
     connection = None
     try:
         connection = sqlite3.connect(db_file)
@@ -111,6 +112,7 @@ def location():
 
 
 def character():
+    print("fetching character pages")
     connection = None
     try:
         connection = sqlite3.connect(db_file)
@@ -172,6 +174,7 @@ def character():
 
 
 def episode():
+    print("fetching episode pages")
     connection = None
     try:
         connection = sqlite3.connect(db_file)
