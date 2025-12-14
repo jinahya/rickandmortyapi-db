@@ -1,3 +1,3 @@
 # rickandmortyapi-db
 
-Generates an SQLite database file from [The Rick and Morty API](https://rickandmortyapi.com).
+Generates an SQLite database from [The Rick and Morty API](https://rickandmortyapi.com).
