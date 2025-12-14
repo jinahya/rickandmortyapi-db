@@ -24,24 +24,24 @@ CREATE TABLE IF NOT EXISTS character
     type          TEXT,
     gender        TEXT NOT NULL,
     origin_name   TEXT NOT NULL, -- $.origin.name
-    origin_url    TEXT NOT NULL, -- $.origin.url
+    origin_url    TEXT NULL,     -- $.origin.url
     location_name TEXT NOT NULL, -- $.location.name
-    location_url  TEXT NOT NULL, -- $.location.url
+    location_url  TEXT NULL,     -- $.location.url
     image         TEXT NOT NULL,
     episode       TEXT NOT NULL,
     url           TEXT NOT NULL UNIQUE,
     created       TEXT NOT NULL,
-    _origin_id    INTEGER,       -- location.id for the $.origin.url
-    _location_id  INTEGER,       -- location.id for the $.location.url
-    FOREIGN KEY (_origin_id) REFERENCES location (id),
-    FOREIGN KEY (_location_id) REFERENCES location (id)
+    origin_id_    INTEGER,       -- location.id for the $.origin.url
+    location_id_  INTEGER,       -- location.id for the $.location.url
+    FOREIGN KEY (origin_id_) REFERENCES location (id),
+    FOREIGN KEY (location_id_) REFERENCES location (id)
 );
 
 CREATE INDEX character_created_index ON character (created);
 
-CREATE INDEX character__origin_id_index ON character (_origin_id);
+CREATE INDEX character_origin_id__index ON character (origin_id_);
 
-CREATE INDEX character__location_id_index ON character (_location_id);
+CREATE INDEX character_location_id__index ON character (location_id_);
 
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS episode
@@ -53,12 +53,12 @@ CREATE TABLE IF NOT EXISTS episode
     characters    TEXT NOT NULL,
     url           TEXT NOT NULL UNIQUE,
     created       TEXT NOT NULL,
-    _air_date_iso TEXT NOT NULL -- ISO 8601 date format of the `air_date`
+    air_date_iso_ TEXT NOT NULL -- ISO 8601 date format of the `air_date`
 );
 
 CREATE INDEX episode_created_index ON episode (created);
 
-CREATE INDEX episode__air_date_iso_index ON episode (_air_date_iso);
+CREATE INDEX episode_air_date_iso__index ON episode (air_date_iso_);
 
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS location_resident
