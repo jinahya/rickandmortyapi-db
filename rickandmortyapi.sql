@@ -17,20 +17,22 @@ CREATE INDEX location_created ON location (created);
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS character
 (
-    id           INTEGER PRIMARY KEY,
-    name         TEXT NOT NULL,
-    status       TEXT NOT NULL,
-    species      TEXT NOT NULL,
-    type         TEXT,
-    gender       TEXT NOT NULL,
-    origin       TEXT NOT NULL,
-    location     TEXT NOT NULL,
-    image        TEXT NOT NULL,
-    episode      TEXT NOT NULL,
-    url          TEXT NOT NULL UNIQUE,
-    created      TEXT NOT NULL,
-    _origin_id   INTEGER, -- location.id for the $.origin.url
-    _location_id INTEGER, -- location.id for the $.location.url
+    id            INTEGER PRIMARY KEY,
+    name          TEXT NOT NULL,
+    status        TEXT NOT NULL,
+    species       TEXT NOT NULL,
+    type          TEXT,
+    gender        TEXT NOT NULL,
+    origin_name   TEXT NOT NULL, -- $.origin.name
+    origin_url    TEXT NOT NULL, -- $.origin.url
+    location_name TEXT NOT NULL, -- $.location.name
+    location_url  TEXT NOT NULL, -- $.location.url
+    image         TEXT NOT NULL,
+    episode       TEXT NOT NULL,
+    url           TEXT NOT NULL UNIQUE,
+    created       TEXT NOT NULL,
+    _origin_id    INTEGER,       -- location.id for the $.origin.url
+    _location_id  INTEGER,       -- location.id for the $.location.url
     FOREIGN KEY (_origin_id) REFERENCES location (id),
     FOREIGN KEY (_location_id) REFERENCES location (id)
 );
@@ -44,13 +46,13 @@ CREATE INDEX character__location_id_index ON character (_location_id);
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS episode
 (
-    id           INTEGER PRIMARY KEY,
-    name         TEXT NOT NULL,
-    air_date     TEXT NOT NULL,
-    episode      TEXT NOT NULL UNIQUE,
-    characters   TEXT NOT NULL,
-    url          TEXT NOT NULL UNIQUE,
-    created      TEXT NOT NULL,
+    id            INTEGER PRIMARY KEY,
+    name          TEXT NOT NULL,
+    air_date      TEXT NOT NULL,
+    episode       TEXT NOT NULL UNIQUE,
+    characters    TEXT NOT NULL,
+    url           TEXT NOT NULL UNIQUE,
+    created       TEXT NOT NULL,
     _air_date_iso TEXT NOT NULL -- ISO 8601 date format of the `air_date`
 );
 
@@ -97,5 +99,3 @@ CREATE TABLE IF NOT EXISTS episode_character
 );
 
 CREATE INDEX episode_character_character_id_index ON episode_character (character_id);
-
-

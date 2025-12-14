@@ -103,13 +103,24 @@ def character():
             if response is None:
                 break
             for result in response["results"]:
-                _origin_id = (result["origin"]["url"].split("/")[-1] or None,)
-                _location_id = (result["location"]["url"].split("/")[-1] or None,)
+                origin_name= result["origin"]["name"]
+                origin_url= result["origin"]["url"]
+                location_name= result["location"]["name"]
+                location_url= result["location"]["url"]
+                _origin_id = origin_url.split("/")[-1] or None
+                _location_id = location_url.split("/")[-1] or None
                 cursor.execute(
                     """INSERT INTO character
-                       (id, name, status, species, type, gender, origin, location, image, episode, url, created,
+                       (id, name, status, species, type, gender,
+                        origin_name, origin_url,
+                        location_name, location_url,
+                        image, episode, url, created,
                         _origin_id, _location_id)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                       VALUES (?, ?, ?, ?, ?, ?,
+                               ?, ?,
+                               ?, ?,
+                               ?, ?, ?, ?,
+                               ?, ?)""",
                     (
                         result["id"],
                         result["name"],
@@ -117,8 +128,10 @@ def character():
                         result["species"],
                         result["type"].strip() or None,
                         result["gender"],
-                        json.dumps(result["origin"]),
-                        json.dumps(result["location"]),
+                        origin_name,
+                        origin_url,
+                        location_name,
+                        location_url,
                         result["image"],
                         ",".join(result["episode"]),
                         result["url"],
@@ -180,49 +193,49 @@ def episode():
             connection.close()
 
 
-def character():
-    connection = None
-    try:
-        connection = sqlite3.connect(db_file)
-        # connection.set_trace_callback(log_sql_callback)
-        cursor = connection.cursor()
-        page = 1
-        while True:
-            response = read("/character", page)
-            if response is None:
-                break
-            for result in response["results"]:
-                cursor.execute(
-                    """INSERT INTO character
-                       (id, name, status, species, type, gender, origin, location, image, episode, url, created,
-                        _origin_id, _location_id)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                    (
-                        result["id"],
-                        result["name"],
-                        result["status"],
-                        result["species"],
-                        result["type"].strip() or None,
-                        result["gender"],
-                        json.dumps(result["origin"]),
-                        json.dumps(result["location"]),
-                        result["image"],
-                        ",".join(result["episode"]),
-                        result["url"],
-                        result["created"],
-                        result["origin"]["url"].split("/")[-1] or None,
-                        result["location"]["url"].split("/")[-1] or None,
-                    ),
-                )
-            page += 1
-        connection.commit()
-    except sqlite3.Error as e:
-        print(f"a database error occurred: {e}")
-    except IOError as e:
-        print(f"an error reading the SQL file occurred: {e}")
-    finally:
-        if connection:
-            connection.close()
+# def character():
+#     connection = None
+#     try:
+#         connection = sqlite3.connect(db_file)
+#         # connection.set_trace_callback(log_sql_callback)
+#         cursor = connection.cursor()
+#         page = 1
+#         while True:
+#             response = read("/character", page)
+#             if response is None:
+#                 break
+#             for result in response["results"]:
+#                 cursor.execute(
+#                     """INSERT INTO character
+#                        (id, name, status, species, type, gender, origin, location, image, episode, url, created,
+#                         _origin_id, _location_id)
+#                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+#                     (
+#                         result["id"],
+#                         result["name"],
+#                         result["status"],
+#                         result["species"],
+#                         result["type"].strip() or None,
+#                         result["gender"],
+#                         json.dumps(result["origin"]),
+#                         json.dumps(result["location"]),
+#                         result["image"],
+#                         ",".join(result["episode"]),
+#                         result["url"],
+#                         result["created"],
+#                         result["origin"]["url"].split("/")[-1] or None,
+#                         result["location"]["url"].split("/")[-1] or None,
+#                     ),
+#                 )
+#             page += 1
+#         connection.commit()
+#     except sqlite3.Error as e:
+#         print(f"a database error occurred: {e}")
+#     except IOError as e:
+#         print(f"an error reading the SQL file occurred: {e}")
+#     finally:
+#         if connection:
+#             connection.close()
 
 
 def location_resident():
@@ -332,6 +345,20 @@ def vacuum():
             connection.close()
 
 
+def reindex():
+    try:
+        connection = sqlite3.connect(db_file)
+        cursor = connection.cursor()
+        cursor.execute("REINDEX;")
+        print(f"database '{db_file}' successfully REINDEX-ed")
+    except sqlite3.Error as e:
+        print(f"an SQLite error occurred: {e}")
+        return False
+    finally:
+        if connection:
+            connection.close()
+
+
 def check():
     try:
         # Connect to the SQLite database
@@ -396,7 +423,7 @@ episode_character()
 
 # ----------------------------------------------------------------------------------------------------------------------
 vacuum()
-
+reindex()
 check()
 
 # ----------------------------------------------------------------------------------------------------------------------
