@@ -10,14 +10,16 @@ class character {
    species: text
    type: text
    gender: text
-   origin: text
-   location: text
+   origin_name: text
+   origin_url: text
+   location_name: text
+   location_url: text
    image: text
    episode: text
    url: text
    created: text
-   _origin_id: integer
-   _location_id: integer
+   origin_id_: integer
+   location_id_: integer
    id: integer
 }
 class character_episode {
@@ -31,7 +33,7 @@ class episode {
    characters: text
    url: text
    created: text
-   _air_date_iso: text
+   air_date_iso_: text
    id: integer
 }
 class episode_character {
@@ -52,8 +54,8 @@ class location_resident {
    resident_id: integer
 }
 
-character          -[#595959,plain]-^  location          : "_location_id:id"
-character          -[#595959,plain]-^  location          : "_origin_id:id"
+character          -[#595959,plain]-^  location          : "origin_id_:id"
+character          -[#595959,plain]-^  location          : "location_id_:id"
 character_episode  -[#595959,plain]-^  character         : "character_id:id"
 character_episode  -[#595959,plain]-^  episode           : "episode_id:id"
 episode_character  -[#595959,plain]-^  character         : "character_id:id"
