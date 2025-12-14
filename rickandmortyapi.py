@@ -156,7 +156,7 @@ def episode():
                 ).strftime("%Y-%m-%d")
                 cursor.execute(
                     """INSERT INTO episode
-                       (id, name, air_date, episode, characters, url, created, _air_date_iso)
+                           (id, name, air_date, episode, characters, url, created, _air_date_iso)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                     (
                         result["id"],
@@ -231,17 +231,20 @@ def location_resident():
         connection = sqlite3.connect(db_file)
         # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
-        cursor.execute("""SELECT id, residents FROM location ORDER BY id ASC""")
+        cursor.execute("""SELECT id, residents
+                          FROM location
+                          ORDER BY id ASC""")
         for each in cursor.fetchall():
             id = each[0]
             residents = each[1]
             if residents is None:
                 continue
             for resident_id in sorted(
-                [e.split("/")[-1] for e in residents.split(",")], key=int
+                    [e.split("/")[-1] for e in residents.split(",")], key=int
             ):
                 cursor.execute(
-                    """INSERT INTO location_resident (location_id, resident_id) VALUES (?, ?)""",
+                    """INSERT INTO location_resident (location_id, resident_id)
+                       VALUES (?, ?)""",
                     (id, resident_id),
                 )
         connection.commit()
@@ -259,17 +262,20 @@ def character_episode():
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
-        cursor.execute("""SELECT id, episode FROM character ORDER BY id ASC""")
+        cursor.execute("""SELECT id, episode
+                          FROM character
+                          ORDER BY id ASC""")
         for each in cursor.fetchall():
             id = each[0]
             episode = each[1]
             if episode is None:
                 continue
             for episode_id in sorted(
-                [e.split("/")[-1] for e in episode.split(",")], key=int
+                    [e.split("/")[-1] for e in episode.split(",")], key=int
             ):
                 cursor.execute(
-                    """INSERT INTO character_episode (character_id, episode_id) VALUES (?, ?)""",
+                    """INSERT INTO character_episode (character_id, episode_id)
+                       VALUES (?, ?)""",
                     (id, episode_id),
                 )
         connection.commit()
@@ -287,17 +293,20 @@ def episode_character():
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
-        cursor.execute("""SELECT id, characters FROM episode ORDER BY id ASC""")
+        cursor.execute("""SELECT id, characters
+                          FROM episode
+                          ORDER BY id ASC""")
         for each in cursor.fetchall():
             id = each[0]
             characters = each[1]
             if characters is None:
                 continue
             for character_id in sorted(
-                [e.split("/")[-1] for e in characters.split(",")], key=int
+                    [e.split("/")[-1] for e in characters.split(",")], key=int
             ):
                 cursor.execute(
-                    """INSERT INTO episode_character (episode_id, character_id) VALUES (?, ?)""",
+                    """INSERT INTO episode_character (episode_id, character_id)
+                       VALUES (?, ?)""",
                     (id, character_id),
                 )
         connection.commit()
@@ -318,6 +327,37 @@ def vacuum():
         print(f"database '{db_file}' successfully vacuumed")
     except sqlite3.Error as e:
         print(f"an error occurred during VACUUM: {e}")
+    finally:
+        if connection:
+            connection.close()
+
+
+def check():
+    try:
+        # Connect to the SQLite database
+        connection = sqlite3.connect(db_file)
+        cursor = connection.cursor()
+
+        # Execute the integrity check PRAGMA
+        cursor.execute('PRAGMA integrity_check;')
+
+        # Fetch all results. The PRAGMA returns one or more rows.
+        # If everything is "ok", it returns a single row with the value "ok".
+        results = cursor.fetchall()
+
+        # Check if the result is "ok"
+        if len(results) == 1 and results[0][0] == 'ok':
+            print(f"database '{db_file}' is intact and not corrupted.")
+            return True
+        else:
+            print(f"database '{db_file}' is corrupted. details:")
+            for row in results:
+                print(f"- {row[0]}")
+            return False
+
+    except sqlite3.Error as e:
+        print(f"an SQLite error occurred: {e}")
+        return False
     finally:
         if connection:
             connection.close()
@@ -356,6 +396,8 @@ episode_character()
 
 # ----------------------------------------------------------------------------------------------------------------------
 vacuum()
+
+check()
 
 # ----------------------------------------------------------------------------------------------------------------------
 location_count = count("location")
