@@ -3,6 +3,7 @@ import json
 import os
 import requests
 import sqlite3
+from typing import Callable, Any
 
 
 # use with connection.set_trace_callback(log_sql_callback)
@@ -11,6 +12,22 @@ def log_sql_callback(statement):
 
 
 db_file = "rickandmortyapi.db"
+
+
+def execute_with_connection(operation: Callable[[sqlite3.Connection], Any]) -> Any:
+    connection = None
+    try:
+        connection = sqlite3.connect(db_file)
+        result = operation(connection)
+        return result
+    except sqlite3.Error as e:
+        print(f"database error: {e}")
+        if connection:
+            connection.rollback()
+        raise
+    finally:
+        if connection:
+            connection.close()
 
 
 def create():
@@ -24,6 +41,7 @@ def create():
             sql_script = f.read()
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         print(f"new database '{db_file}' created and connected")
         cursor.executescript(sql_script)
         connection.commit()
@@ -60,6 +78,7 @@ def location():
         connection = sqlite3.connect(db_file)
         # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         page = 1
         while True:
             response = read("/location", page)
@@ -97,6 +116,7 @@ def character():
         connection = sqlite3.connect(db_file)
         # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         page = 1
         while True:
             response = read("/character", page)
@@ -157,6 +177,7 @@ def episode():
         connection = sqlite3.connect(db_file)
         # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         page = 1
         while True:
             response = read("/episode", page)
@@ -201,6 +222,7 @@ def location_resident():
         connection = sqlite3.connect(db_file)
         # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("""SELECT id, residents
                           FROM location
                           ORDER BY id ASC""")
@@ -232,6 +254,7 @@ def character_episode():
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("""SELECT id, episode
                           FROM character
                           ORDER BY id ASC""")
@@ -263,6 +286,7 @@ def episode_character():
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("""SELECT id, characters
                           FROM episode
                           ORDER BY id ASC""")
@@ -293,6 +317,7 @@ def vacuum():
     try:
         connection = sqlite3.connect(db_file, isolation_level=None)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("VACUUM")
         print(f"database '{db_file}' successfully vacuumed")
     except sqlite3.Error as e:
@@ -306,6 +331,7 @@ def reindex():
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("REINDEX;")
         print(f"database '{db_file}' successfully REINDEX-ed")
     except sqlite3.Error as e:
@@ -321,15 +347,9 @@ def check():
         # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
-
-        # Execute the integrity check PRAGMA
+        cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute('PRAGMA integrity_check;')
-
-        # Fetch all results. The PRAGMA returns one or more rows.
-        # If everything is "ok", it returns a single row with the value "ok".
         results = cursor.fetchall()
-
-        # Check if the result is "ok"
         if len(results) == 1 and results[0][0] == 'ok':
             print(f"database '{db_file}' is intact and not corrupted.")
             return True
@@ -352,6 +372,7 @@ def count(table):
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
         query = f"SELECT COUNT(*) FROM {table}"
         cursor.execute(query)
         result = cursor.fetchone()
