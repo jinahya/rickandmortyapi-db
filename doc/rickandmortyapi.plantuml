@@ -1,0 +1,63 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class character {
+   name: text
+   status: text
+   species: text
+   type: text
+   gender: text
+   origin: text
+   location: text
+   image: text
+   episode: text
+   url: text
+   created: text
+   _origin_id: integer
+   _location_id: integer
+   id: integer
+}
+class character_episode {
+   character_id: integer
+   episode_id: integer
+}
+class episode {
+   name: text
+   air_date: text
+   episode: text
+   characters: text
+   url: text
+   created: text
+   _air_date_iso: text
+   id: integer
+}
+class episode_character {
+   episode_id: integer
+   character_id: integer
+}
+class location {
+   name: text
+   type: text
+   dimension: text
+   residents: text
+   url: text
+   created: text
+   id: integer
+}
+class location_resident {
+   location_id: integer
+   resident_id: integer
+}
+
+character          -[#595959,plain]-^  location          : "_location_id:id"
+character          -[#595959,plain]-^  location          : "_origin_id:id"
+character_episode  -[#595959,plain]-^  character         : "character_id:id"
+character_episode  -[#595959,plain]-^  episode           : "episode_id:id"
+episode_character  -[#595959,plain]-^  character         : "character_id:id"
+episode_character  -[#595959,plain]-^  episode           : "episode_id:id"
+location_resident  -[#595959,plain]-^  character         : "resident_id:id"
+location_resident  -[#595959,plain]-^  location          : "location_id:id"
+@enduml
