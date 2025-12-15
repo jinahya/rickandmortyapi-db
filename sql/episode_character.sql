@@ -4,3 +4,40 @@
 -- ---------------------------------------------------------------------------------------------------------- episode_id
 
 -- -------------------------------------------------------------------------------------------------------- character_id
+
+SELECT episode_id, COUNT(1) AS character_count, GROUP_CONCAT(c.id || '(' || c.name || ')' ORDER BY c.id)
+FROM episode_character ec
+         JOIN character c ON ec.character_id = c.id
+GROUP BY episode_id
+-- HAVING character_count > 1
+ORDER BY character_count DESC
+;
+
+SELECT episode_id, character_id
+FROM episode_character
+GROUP BY episode_id
+;
+
+
+
+-- 1: Rick Sanchez
+-- 2: Morty Smith
+-- 3: Summer Smith
+-- 4: Beth Smith
+-- 5: Jerry Smith
+
+SELECT ec.episode_id, GROUP_CONCAT(ec.character_id) character_ids, GROUP_CONCAT(c.name) character_names
+FROM episode_character ec
+         JOIN character c ON ec.character_id = c.id
+WHERE ec.character_id IN (1, 2, 3, 4)
+GROUP BY ec.episode_id
+HAVING COUNT(DISTINCT ec.character_id) = 4
+;
+
+SELECT ec.episode_id, GROUP_CONCAT(ec.character_id) character_ids, GROUP_CONCAT(c.name) character_names
+FROM episode_character ec
+         JOIN character c ON ec.character_id = c.id
+WHERE ec.character_id IN (1, 2, 3, 4, 5)
+GROUP BY ec.episode_id
+HAVING COUNT(DISTINCT c.id) = 5
+;
