@@ -47,13 +47,13 @@ Order by gender ASC
 -- ----------------------------------------------------------------------------------------------------------- origin_id
 SELECT c.name character_name, l.name origin_name
 FROM character c
-         JOIN location l ON c._origin_id = l.id
+         JOIN location l ON c.origin_id_ = l.id
 ORDER BY c.id ASC
 ;
 
 -- --------------------------------------------------------------------------------------------------------- location_id
 SELECT c.name character_name, l.name location_name
 FROM character c
-         JOIN location l ON c._location_id = l.id
+         JOIN location l ON c.location_id_ = l.id
 ORDER BY c.id ASC
 ;
