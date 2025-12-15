@@ -37,6 +37,14 @@ CREATE TABLE IF NOT EXISTS character
     FOREIGN KEY (location_id_) REFERENCES location (id)
 );
 
+CREATE INDEX character_status_index ON character (status);
+
+CREATE INDEX character_species_index ON character (species);
+
+CREATE INDEX character_type_index ON character (type);
+
+CREATE INDEX character_gender_index ON character (gender);
+
 CREATE INDEX character_created_index ON character (created);
 
 CREATE INDEX character_origin_id__index ON character (origin_id_);
