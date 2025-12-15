@@ -29,6 +29,30 @@ GROUP BY episode_id
 SELECT ec.episode_id, GROUP_CONCAT(ec.character_id) character_ids, GROUP_CONCAT(c.name) character_names
 FROM episode_character ec
          JOIN character c ON ec.character_id = c.id
+WHERE ec.character_id IN (4, 5)
+GROUP BY ec.episode_id
+HAVING COUNT(DISTINCT ec.character_id) = 2
+;
+
+SELECT ec.episode_id, GROUP_CONCAT(ec.character_id) character_ids, GROUP_CONCAT(c.name) character_names
+FROM episode_character ec
+         JOIN character c ON ec.character_id = c.id
+WHERE ec.character_id IN (1, 2, 4)
+GROUP BY ec.episode_id
+HAVING COUNT(DISTINCT ec.character_id) = 3
+;
+
+SELECT ec.episode_id, GROUP_CONCAT(ec.character_id) character_ids, GROUP_CONCAT(c.name) character_names
+FROM episode_character ec
+         JOIN character c ON ec.character_id = c.id
+WHERE ec.character_id IN (1, 2, 5)
+GROUP BY ec.episode_id
+HAVING COUNT(DISTINCT ec.character_id) = 3
+;
+
+SELECT ec.episode_id, GROUP_CONCAT(ec.character_id) character_ids, GROUP_CONCAT(c.name) character_names
+FROM episode_character ec
+         JOIN character c ON ec.character_id = c.id
 WHERE ec.character_id IN (1, 2, 3, 4)
 GROUP BY ec.episode_id
 HAVING COUNT(DISTINCT ec.character_id) = 4
