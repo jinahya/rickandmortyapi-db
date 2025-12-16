@@ -15,9 +15,18 @@ FROM location_resident lr
 WHERE c.id IS NULL
 ;
 
+-- location/{id}/$.residents = /character/{id}$.location.id
+SELECT lr.*, c.id
+FROM location_resident lr
+         LEFT OUTER JOIN character c ON lr.resident_id = c.id
+WHERE c.id IS NOT NULL
+  AND c.location_id_ <> lr.location_id
+;
+
+
 SELECT lr.*, c.id, c.location_id_
 FROM location_resident lr
-         LEFT OUTER JOIN character c ON lr.resident_id = c.id AND lr.location_id = c.location_id_
+         LEFT OUTER JOIN character c ON lr.resident_id = c.id
 WHERE c.id IS NULL
 ;
 

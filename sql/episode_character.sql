@@ -2,8 +2,19 @@
 
 
 -- ---------------------------------------------------------------------------------------------------------- episode_id
+SELECT *
+FROM episode_character ec
+         LEFT OUTER JOIN main.episode e ON ec.episode_id = e.id
+WHERE e.id IS NULL
+;
+
 
 -- -------------------------------------------------------------------------------------------------------- character_id
+SELECT *
+FROM episode_character ec
+         LEFT OUTER JOIN character c ON ec.character_id = c.id
+WHERE c.id IS NULL
+;
 
 SELECT episode_id, COUNT(1) AS character_count, GROUP_CONCAT(c.id || '(' || c.name || ')' ORDER BY c.id)
 FROM episode_character ec
