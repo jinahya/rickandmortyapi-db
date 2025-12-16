@@ -89,9 +89,11 @@ def location():
                 id_ = result["id"]
                 # https://github.com/afuh/rick-and-morty-api/issues/140
                 if id_ == 35:
-                    character125="https://rickandmortyapi.com/api/character/125"
-                    if character125 not in result["residents"]:
-                        result["residents"].append(character125)
+                    url="https://rickandmortyapi.com/api/character/125"
+                    if url in result["residents"]:
+                        print("character/125 is already a resident of location/35; Check https://github.com/afuh/rick-and-morty-api/issues/140")
+                    else:
+                        result["residents"].append(url)
                 cursor.execute(
                     """INSERT INTO location
                            (id, name, type, dimension, residents, url, created)
