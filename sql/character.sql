@@ -39,21 +39,40 @@ Order by gender ASC
 -- --------------------------------------------------------------------------------------------------------------- image
 
 -- ------------------------------------------------------------------------------------------------------------- episode
+-- character_episode - episode; should be empty
+SELECT *
+FROM character c
+         JOIN character_episode ce ON c.id = ce.character_id
+         LEFT OUTER JOIN episode e ON ce.episode_id = e.id
+WHERE e.id IS NULL
+;
 
 -- ----------------------------------------------------------------------------------------------------------------- url
 
 -- ------------------------------------------------------------------------------------------------------------- created
 
 -- ---------------------------------------------------------------------------------------------------------- origin_id_
-SELECT c.name character_name, l.name origin_name
+-- unmapped origin - should be empty
+SELECT c.name, l.name
 FROM character c
          JOIN location l ON c.origin_id_ = l.id
-ORDER BY c.id ASC
+WHERE c.origin_id_ IS NOT NULL
+  AND l.id IS NULL
 ;
 
 -- -------------------------------------------------------------------------------------------------------- location_id_
-SELECT c.name character_name, l.name location_name
+-- unmapped location - should be empty
+SELECT c.name, l.name
 FROM character c
          JOIN location l ON c.location_id_ = l.id
-ORDER BY c.id ASC
+WHERE c.origin_id_ IS NOT NULL
+  AND l.id IS NULL
+;
+
+-- unmapped residents - should be empty
+SELECT c.id, c.location_id_, lr.location_id, lr.resident_id
+FROM character c
+         LEFT OUTER JOIN location_resident lr ON c.location_id_ = lr.location_id AND c.id = lr.resident_id
+WHERE c.location_id_ IS NOT NULL
+  AND lr.resident_id IS NULL
 ;

@@ -36,3 +36,18 @@ GROUP BY resident_id
 -- HAVING COUNT(1) > 1
 -- ORDER BY COUNT(1)
 ;
+
+-- character.location_id_ -> location
+SELECT c.id, c.location_id_, l.id
+FROM character c
+         INNER JOIN location l ON c.location_id_ = l.id
+WHERE l.id IS NULL
+;
+
+-- character.location_id_ -> location -> residents
+SELECT c.id, l.id, lr.location_id, lr.resident_id
+FROM character c
+         INNER JOIN location l ON c.location_id_ = l.id
+         LEFT OUTER JOIN location_resident lr ON l.id = lr.location_id
+WHERE lr.resident_id IS NULL
+;

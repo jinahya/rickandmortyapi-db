@@ -31,6 +31,13 @@ WHERE seqnum_id <> seqnum_date
 ;
 
 -- ---------------------------------------------------------------------------------------------------------- characters
+-- episode_character - character; should be empty
+SELECT *
+FROM episode e
+         JOIN episode_character ec ON e.id = ec.episode_id
+         LEFT OUTER JOIN character c ON ec.character_id = c.id
+WHERE c.id IS NULL
+;
 
 -- ----------------------------------------------------------------------------------------------------------------- url
 

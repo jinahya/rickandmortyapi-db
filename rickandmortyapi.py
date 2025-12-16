@@ -86,12 +86,18 @@ def location():
             if response is None:
                 break
             for result in response["results"]:
+                id_ = result["id"]
+                # https://github.com/afuh/rick-and-morty-api/issues/140
+                if id_ == 35:
+                    character125="https://rickandmortyapi.com/api/character/125"
+                    if character125 not in result["residents"]:
+                        result["residents"].append(character125)
                 cursor.execute(
                     """INSERT INTO location
                            (id, name, type, dimension, residents, url, created)
                        VALUES (?, ?, ?, ?, ?, ?, ?)""",
                     (
-                        result["id"],
+                        id_,
                         result["name"],
                         result["type"].strip() or None,
                         result["dimension"].strip() or None,
