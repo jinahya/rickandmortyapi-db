@@ -87,13 +87,12 @@ def location():
                 break
             for result in response["results"]:
                 id_ = result["id"]
+                residents = result["residents"]
                 # https://github.com/afuh/rick-and-morty-api/issues/140
                 if id_ == 35:
-                    url="https://rickandmortyapi.com/api/character/125"
-                    if url in result["residents"]:
-                        print("character/125 is already a resident of location/35; Check https://github.com/afuh/rick-and-morty-api/issues/140")
-                    else:
-                        result["residents"].append(url)
+                    character_125 = "https://rickandmortyapi.com/api/character/125"
+                    if character_125 not in residents:
+                        residents.append(character_125)
                 cursor.execute(
                     """INSERT INTO location
                            (id, name, type, dimension, residents, url, created)
@@ -103,7 +102,7 @@ def location():
                         result["name"],
                         result["type"].strip() or None,
                         result["dimension"].strip() or None,
-                        ",".join(result["residents"]).strip() or None,
+                        ",".join(residents).strip() or None,
                         result["url"],
                         result["created"],
                     ),
@@ -133,12 +132,18 @@ def character():
             if response is None:
                 break
             for result in response["results"]:
+                id_ = result["id"]
                 origin_name = result["origin"]["name"]
                 origin_url = result["origin"]["url"].strip() or None
                 location_name = result["location"]["name"]
                 location_url = result["location"]["url"].strip() or None
                 origin_id_ = origin_url.split("/")[-1] if origin_url is not None else None
                 location_id_ = location_url.split("/")[-1] if location_url is not None else None
+                episode = result["episode"]
+                if id_ == 663:
+                    episode_10 = "https://rickandmortyapi.com/api/episode/10"
+                    if episode_10 not in episode:
+                        episode.append(episode_10)
                 cursor.execute(
                     """INSERT INTO character
                        (id, name, status, species, type, gender,
@@ -152,7 +157,7 @@ def character():
                                ?, ?, ?, ?,
                                ?, ?)""",
                     (
-                        result["id"],
+                        id_,
                         result["name"],
                         result["status"],
                         result["species"],
@@ -163,7 +168,7 @@ def character():
                         location_name,
                         location_url,
                         result["image"],
-                        ",".join(result["episode"]),
+                        ",".join(episode),
                         result["url"],
                         result["created"],
                         origin_id_,
@@ -197,6 +202,12 @@ def episode():
             for result in response["results"]:
                 air_date = result["air_date"]
                 air_date_iso_ = datetime.datetime.strptime(air_date, "%B %d, %Y").strftime("%Y-%m-%d")
+                id_ = result["id"]
+                characters = result["characters"]
+                if id_ == 18 or id_ == 21:
+                    character_125 = "https://rickandmortyapi.com/api/character/125"
+                    if character_125 not in characters:
+                        characters.append(character_125)
                 cursor.execute(
                     """INSERT INTO episode
                        (id, name, air_date, episode, characters,
@@ -206,11 +217,11 @@ def episode():
                                ?, ?,
                                ?)""",
                     (
-                        result["id"],
+                        id_,
                         result["name"],
                         air_date,
                         result["episode"],
-                        ",".join(result["characters"]),
+                        ",".join(characters),
                         result["url"],
                         result["created"],
                         air_date_iso_,

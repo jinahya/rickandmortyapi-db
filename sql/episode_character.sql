@@ -76,3 +76,14 @@ WHERE ec.character_id IN (1, 2, 3, 4, 5)
 GROUP BY ec.episode_id
 HAVING COUNT(DISTINCT c.id) = 5
 ;
+
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- should be empty
+SELECT *
+FROM episode_character ec
+         LEFT OUTER JOIN character_episode ce ON ec.episode_id = ce.episode_id AND ec.character_id = ce.character_id
+WHERE ce.episode_id IS NULL
+;
+
