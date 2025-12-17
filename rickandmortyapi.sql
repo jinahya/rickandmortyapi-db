@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS character
     origin_url    TEXT NULL,     -- $.origin.url
     location_name TEXT NOT NULL, -- $.location.name
     location_url  TEXT NULL,     -- $.location.url
-    image         TEXT NOT NULL,
+    image         TEXT NOT NULL UNIQUE,
     episode       TEXT NOT NULL,
     url           TEXT NOT NULL UNIQUE,
     created       TEXT NOT NULL,
