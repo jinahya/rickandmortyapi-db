@@ -1,9 +1,8 @@
 # rickandmortyapi-db
 
-[![Build](https://github.com/jinahya/rickandmortyapi-db/actions/workflows/python-app.yml/badge.svg)](https://github.com/jinahya/rickandmortyapi-db/actions/workflows/python-app.yml)
+[![Python](https://github.com/jinahya/rickandmortyapi-db/actions/workflows/python-app.yml/badge.svg)](https://github.com/jinahya/rickandmortyapi-db/actions/workflows/python-app.yml)
 
 Generates an SQLite database from [The Rick and Morty API](https://rickandmortyapi.com).
-
 
 ## How to
 
