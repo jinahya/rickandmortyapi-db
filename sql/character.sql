@@ -11,8 +11,15 @@ ORDER BY id ASC
 -- -------------------------------------------------------------------------------------------------------------- status
 SELECT DISTINCT status
 FROM character
-Order by status ASC
+ORDER BY status ASC
 ;
+
+SELECT status, COUNT(*) AS count
+FROM character
+GROUP BY status
+ORDER BY count DESC
+;
+
 
 -- ------------------------------------------------------------------------------------------------------------- species
 SELECT DISTINCT species
@@ -20,17 +27,38 @@ FROM character
 Order by species ASC
 ;
 
+SELECT species, COUNT(*) AS count
+FROM character
+GROUP BY species
+ORDER BY count DESC
+;
+
+
 -- ---------------------------------------------------------------------------------------------------------------- type
 SELECT DISTINCT type
 FROM character
 Order by type ASC
 ;
 
+SELECT type, COUNT(*) AS count
+FROM character
+GROUP BY type
+ORDER BY count DESC
+;
+
+
 -- -------------------------------------------------------------------------------------------------------------- gender
 SELECT DISTINCT gender
 FROM character
 Order by gender ASC
 ;
+
+SELECT gender, COUNT(*) AS count
+FROM character
+GROUP BY gender
+ORDER BY count DESC
+;
+
 
 -- -------------------------------------------------------------------------------------------------------------- origin
 

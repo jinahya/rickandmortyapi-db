@@ -33,6 +33,12 @@ FROM location
 ORDER BY dimension ASC
 ;
 
+SELECT dimension, count(*) as count
+FROM location
+GROUP BY dimension
+ORDER BY count DESC
+;
+
 -- ----------------------------------------------------------------------------------------------------------- residents
 
 -- ----------------------------------------------------------------------------------------------------------------- url
