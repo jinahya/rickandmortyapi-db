@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS location
     created   TEXT NOT NULL
 );
 
-CREATE INDEX location_created ON location (created);
+CREATE INDEX location_type_index ON location (type);
+CREATE INDEX location_dimension_index ON location (dimension);
+CREATE INDEX location_created_index ON location (created);
 
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS character
