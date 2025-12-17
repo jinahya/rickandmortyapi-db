@@ -141,6 +141,7 @@ def character():
                 location_id_ = location_url.split("/")[-1] if location_url is not None else None
                 episode = result["episode"]
                 if id_ == 663:
+                    # https://github.com/afuh/rick-and-morty-api/issues/142
                     episode_10 = "https://rickandmortyapi.com/api/episode/10"
                     if episode_10 not in episode:
                         episode.append(episode_10)
@@ -205,6 +206,7 @@ def episode():
                 id_ = result["id"]
                 characters = result["characters"]
                 if id_ == 18 or id_ == 21:
+                    # https://github.com/afuh/rick-and-morty-api/issues/141
                     character_125 = "https://rickandmortyapi.com/api/character/125"
                     if character_125 not in characters:
                         characters.append(character_125)
@@ -336,6 +338,7 @@ def episode_character():
 
 
 def vacuum():
+    connection = None
     try:
         connection = sqlite3.connect(db_file, isolation_level=None)
         cursor = connection.cursor()
@@ -350,6 +353,7 @@ def vacuum():
 
 
 def reindex():
+    connection = None
     try:
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
@@ -365,8 +369,8 @@ def reindex():
 
 
 def check():
+    connection = None
     try:
-        # Connect to the SQLite database
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
@@ -402,6 +406,44 @@ def count(table):
             return result[0]
         else:
             return None
+    except sqlite3.Error as e:
+        print(f"an error occurred while counting: {table} {e}")
+    finally:
+        if connection:
+            connection.close()
+    # check, all characters' episodes are mapped properly
+    try:
+        connection = sqlite3.connect(db_file)
+        cursor = connection.cursor()
+        query = """
+                SELECT *
+                FROM character c
+                         JOIN character_episode ce ON c.id = ce.character_id
+                         LEFT OUTER JOIN episode e ON ce.episode_id = e.id
+                WHERE e.id IS NULL
+                """
+        cursor.execute(query)
+        result = cursor.fetchone()
+        assert result is None
+    except sqlite3.Error as e:
+        print(f"an error occurred while counting: {table} {e}")
+    finally:
+        if connection:
+            connection.close()
+    # check, all episodes' characters are mapped properly
+    try:
+        connection = sqlite3.connect(db_file)
+        cursor = connection.cursor()
+        query = """
+                SELECT *
+                FROM episode e
+                         JOIN episode_character ec ON e.id = ec.episode_id
+                         LEFT OUTER JOIN character c ON ec.character_id = c.id
+                WHERE c.id IS NULL
+                """
+        cursor.execute(query)
+        result = cursor.fetchone()
+        assert result is None
     except sqlite3.Error as e:
         print(f"an error occurred while counting: {table} {e}")
     finally:
