@@ -16,6 +16,12 @@ FROM location
 ORDER BY type ASC
 ;
 
+SELECT type, count(*) as count
+FROM location
+GROUP BY type
+ORDER BY count DESC
+;
+
 -- ----------------------------------------------------------------------------------------------------------- dimension
 SELECT *
 FROM location
