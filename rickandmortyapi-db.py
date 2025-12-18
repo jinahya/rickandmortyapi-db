@@ -17,6 +17,7 @@ def execute_with_connection(operation: Callable[[sqlite3.Connection], Any]) -> A
     connection = None
     try:
         connection = sqlite3.connect(db_file)
+        # connection.set_trace_callback(log_sql_callback)
         result = operation(connection)
         return result
     except sqlite3.Error as e:
@@ -76,7 +77,6 @@ def location():
     connection = None
     try:
         connection = sqlite3.connect(db_file)
-        # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         page = 1
@@ -122,7 +122,6 @@ def character():
     connection = None
     try:
         connection = sqlite3.connect(db_file)
-        # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         page = 1
@@ -191,7 +190,6 @@ def episode():
     connection = None
     try:
         connection = sqlite3.connect(db_file)
-        # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         page = 1
@@ -243,7 +241,6 @@ def location_resident():
     connection = None
     try:
         connection = sqlite3.connect(db_file)
-        # connection.set_trace_callback(log_sql_callback)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("""SELECT id, residents
