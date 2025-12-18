@@ -30,7 +30,7 @@ def execute_with_connection(operation: Callable[[sqlite3.Connection], Any]) -> A
 
 
 def create():
-    sql_file = "rickandmortyapi.sql"
+    sql_file = "rickandmortyapi-db.sql"
     if os.path.exists(db_file):
         print(f"removing existing database file: '{db_file}'")
         os.remove(db_file)
