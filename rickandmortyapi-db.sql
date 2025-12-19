@@ -40,17 +40,11 @@ CREATE TABLE IF NOT EXISTS character
 );
 
 CREATE INDEX character_status_index ON character (status);
-
 CREATE INDEX character_species_index ON character (species);
-
 CREATE INDEX character_type_index ON character (type);
-
 CREATE INDEX character_gender_index ON character (gender);
-
 CREATE INDEX character_created_index ON character (created);
-
 CREATE INDEX character_origin_id__index ON character (origin_id_);
-
 CREATE INDEX character_location_id__index ON character (location_id_);
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -67,7 +61,6 @@ CREATE TABLE IF NOT EXISTS episode
 );
 
 CREATE INDEX episode_created_index ON episode (created);
-
 CREATE INDEX episode_air_date_iso__index ON episode (air_date_iso_);
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -76,13 +69,12 @@ CREATE TABLE IF NOT EXISTS location_resident
 (
     location_id INTEGER NOT NULL,
     resident_id INTEGER NOT NULL,
+    PRIMARY KEY (location_id, resident_id),
+    UNIQUE (resident_id, location_id),
     FOREIGN KEY (location_id) REFERENCES location (id),
-    FOREIGN KEY (resident_id) REFERENCES character (id),
-    UNIQUE (location_id, resident_id),
-    UNIQUE (resident_id, location_id)
+    FOREIGN KEY (resident_id) REFERENCES character (id)
 );
 
--- CREATE INDEX location_resident_resident_id_index ON location_resident (resident_id);
 
 -- --------------------------------------------------------------------------------------------------- character.episode
 CREATE TABLE IF NOT EXISTS character_episode
@@ -90,13 +82,11 @@ CREATE TABLE IF NOT EXISTS character_episode
 (
     character_id INTEGER NOT NULL,
     episode_id   INTEGER NOT NULL,
+    PRIMARY KEY (character_id, episode_id),
+    UNIQUE (episode_id, character_id),
     FOREIGN KEY (character_id) REFERENCES character (id),
-    FOREIGN KEY (episode_id) REFERENCES episode (id),
-    UNIQUE (character_id, episode_id),
-    UNIQUE (episode_id, character_id)
+    FOREIGN KEY (episode_id) REFERENCES episode (id)
 );
-
--- CREATE INDEX character_episode_episode_id_index ON character_episode (episode_id);
 
 
 -- -------------------------------------------------------------------------------------------------- episode.characters
@@ -105,10 +95,8 @@ CREATE TABLE IF NOT EXISTS episode_character
 (
     episode_id   INTEGER NOT NULL,
     character_id INTEGER NOT NULL,
+    PRIMARY KEY (episode_id, character_id),
+    UNIQUE (character_id, episode_id),
     FOREIGN KEY (episode_id) REFERENCES episode (id),
-    FOREIGN KEY (character_id) REFERENCES character (id),
-    UNIQUE (episode_id, character_id),
-    UNIQUE (character_id, episode_id)
+    FOREIGN KEY (character_id) REFERENCES character (id)
 );
-
--- CREATE INDEX episode_character_character_id_index ON episode_character (character_id);
