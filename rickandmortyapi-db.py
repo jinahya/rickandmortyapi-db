@@ -13,7 +13,7 @@ def log_sql_callback(statement):
 db_file = "rickandmortyapi.db"
 
 
-def execute_with_connection(operation: Callable[[sqlite3.Connection], Any]) -> Any:
+def connect(operation: Callable[[sqlite3.Connection], Any]) -> Any:
     connection = None
     try:
         connection = sqlite3.connect(db_file)
@@ -311,7 +311,7 @@ def episode_character():
                           FROM episode
                           ORDER BY id ASC""")
         for each in cursor.fetchall():
-            id = each[0]
+            id_ = each[0]
             characters = each[1]
             if characters is None:
                 continue
@@ -321,7 +321,7 @@ def episode_character():
                 cursor.execute(
                     """INSERT INTO episode_character (episode_id, character_id)
                        VALUES (?, ?)""",
-                    (id, character_id),
+                    (id_, character_id),
                 )
         connection.commit()
     except sqlite3.Error as character_id:
@@ -334,43 +334,34 @@ def episode_character():
 
 
 def vacuum():
-    connection = None
-    try:
-        connection = sqlite3.connect(db_file, isolation_level=None)
-        cursor = connection.cursor()
+    def op(c: sqlite3.Connection):
+        cursor = c.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.execute("VACUUM")
         print(f"database '{db_file}' successfully vacuumed")
-    except sqlite3.Error as e:
-        print(f"an error occurred during VACUUM: {e}")
-    finally:
-        if connection:
-            connection.close()
+
+    connect(op)
 
 
 def reindex():
-    connection = None
-    try:
-        connection = sqlite3.connect(db_file)
-        cursor = connection.cursor()
+    def op(c: sqlite3.Connection):
+        cursor = c.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
-        cursor.execute("REINDEX;")
+        cursor.execute("REINDEX")
         print(f"database '{db_file}' successfully REINDEX-ed")
-    except sqlite3.Error as e:
-        print(f"an SQLite error occurred: {e}")
+
+    try:
+        connect(op)
+    except sqlite3.Error:
         return False
-    finally:
-        if connection:
-            connection.close()
+    return True
 
 
 def check():
-    connection = None
-    try:
-        connection = sqlite3.connect(db_file)
-        cursor = connection.cursor()
+    def op(c: sqlite3.Connection):
+        cursor = c.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
-        cursor.execute('PRAGMA integrity_check;')
+        cursor.execute('PRAGMA integrity_check')
         results = cursor.fetchall()
         if len(results) == 1 and results[0][0] == 'ok':
             print(f"database '{db_file}' is intact and not corrupted.")
@@ -381,70 +372,26 @@ def check():
                 print(f"- {row[0]}")
             return False
 
-    except sqlite3.Error as e:
-        print(f"an SQLite error occurred: {e}")
+    try:
+        return connect(op)
+    except sqlite3.Error:
         return False
-    finally:
-        if connection:
-            connection.close()
 
 
 def count(table):
-    connection = None
-    try:
-        connection = sqlite3.connect(db_file)
-        cursor = connection.cursor()
+    def op(c: sqlite3.Connection):
+        cursor = c.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         query = f"SELECT COUNT(*) FROM {table}"
         cursor.execute(query)
         result = cursor.fetchone()
-        if result:
-            return result[0]
-        else:
-            return None
-    except sqlite3.Error as e:
-        print(f"an error occurred while counting: {table} {e}")
-    finally:
-        if connection:
-            connection.close()
-    # check, all characters' episodes are mapped properly
+        return result[0] if result else None
+
     try:
-        connection = sqlite3.connect(db_file)
-        cursor = connection.cursor()
-        query = """
-                SELECT *
-                FROM character c
-                         JOIN character_episode ce ON c.id = ce.character_id
-                         LEFT OUTER JOIN episode e ON ce.episode_id = e.id
-                WHERE e.id IS NULL
-                """
-        cursor.execute(query)
-        result = cursor.fetchone()
-        assert result is None
+        return connect(op)
     except sqlite3.Error as e:
         print(f"an error occurred while counting: {table} {e}")
-    finally:
-        if connection:
-            connection.close()
-    # check, all episodes' characters are mapped properly
-    try:
-        connection = sqlite3.connect(db_file)
-        cursor = connection.cursor()
-        query = """
-                SELECT *
-                FROM episode e
-                         JOIN episode_character ec ON e.id = ec.episode_id
-                         LEFT OUTER JOIN character c ON ec.character_id = c.id
-                WHERE c.id IS NULL
-                """
-        cursor.execute(query)
-        result = cursor.fetchone()
-        assert result is None
-    except sqlite3.Error as e:
-        print(f"an error occurred while counting: {table} {e}")
-    finally:
-        if connection:
-            connection.close()
+        return None
 
 
 # ----------------------------------------------------------------------------------------------------------------------
