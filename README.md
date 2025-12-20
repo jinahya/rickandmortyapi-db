@@ -6,7 +6,6 @@ Generates an SQLite database from [The Rick and Morty API](https://rickandmortya
 
 See
 
-* [rickandmortyapi-db](https://github.com/jinahya/rickandmortyapi-db)
 * [rickandmortyapi-persistence](https://github.com/jinahya/rickandmortyapi-persistence)
 * [rickandmortyapi-spring-data-rest](https://github.com/jinahya/rickandmortyapi-spring-data-rest)
 
