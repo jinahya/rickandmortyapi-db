@@ -3,13 +3,13 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS location
 (
-    id        INTEGER PRIMARY KEY,
-    name      TEXT NOT NULL,
+    id        INTEGER NOT NULL PRIMARY KEY,
+    name      TEXT    NOT NULL,
     type      TEXT,
     dimension TEXT,
     residents TEXT,
-    url       TEXT NOT NULL UNIQUE,
-    created   TEXT NOT NULL
+    url       TEXT    NOT NULL UNIQUE,
+    created   TEXT    NOT NULL
 );
 
 CREATE INDEX location_type_index ON location (type);
@@ -19,22 +19,22 @@ CREATE INDEX location_created_index ON location (created);
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS character
 (
-    id            INTEGER PRIMARY KEY,
-    name          TEXT NOT NULL,
-    status        TEXT NOT NULL,
-    species       TEXT NOT NULL,
+    id            INTEGER NOT NULL PRIMARY KEY,
+    name          TEXT    NOT NULL,
+    status        TEXT    NOT NULL,
+    species       TEXT    NOT NULL,
     type          TEXT,
-    gender        TEXT NOT NULL,
-    origin_name   TEXT NOT NULL, -- $.origin.name
-    origin_url    TEXT NULL,     -- $.origin.url
-    location_name TEXT NOT NULL, -- $.location.name
-    location_url  TEXT NULL,     -- $.location.url
-    image         TEXT NOT NULL UNIQUE,
-    episode       TEXT NOT NULL,
-    url           TEXT NOT NULL UNIQUE,
-    created       TEXT NOT NULL,
-    origin_id_    INTEGER,       -- location.id for the $.origin.url
-    location_id_  INTEGER,       -- location.id for the $.location.url
+    gender        TEXT    NOT NULL,
+    origin_name   TEXT    NULL, -- $.origin.name
+    origin_url    TEXT    NULL, -- $.origin.url
+    location_name TEXT    NULL, -- $.location.name
+    location_url  TEXT    NULL, -- $.location.url
+    image         TEXT    NOT NULL UNIQUE,
+    episode       TEXT    NOT NULL,
+    url           TEXT    NOT NULL UNIQUE,
+    created       TEXT    NOT NULL,
+    origin_id_    INTEGER,      -- location.id for the $.origin.url
+    location_id_  INTEGER,      -- location.id for the $.location.url
     FOREIGN KEY (origin_id_) REFERENCES location (id),
     FOREIGN KEY (location_id_) REFERENCES location (id)
 );
@@ -50,14 +50,14 @@ CREATE INDEX character_location_id__index ON character (location_id_);
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS episode
 (
-    id            INTEGER PRIMARY KEY,
-    name          TEXT NOT NULL,
-    air_date      TEXT NOT NULL,
-    episode       TEXT NOT NULL UNIQUE,
-    characters    TEXT NOT NULL,
-    url           TEXT NOT NULL UNIQUE,
-    created       TEXT NOT NULL,
-    air_date_iso_ TEXT NOT NULL -- ISO 8601 date format of the `air_date`
+    id            INTEGER NOT NULL PRIMARY KEY,
+    name          TEXT    NOT NULL,
+    air_date      TEXT    NOT NULL,
+    episode       TEXT    NOT NULL UNIQUE,
+    characters    TEXT    NOT NULL,
+    url           TEXT    NOT NULL UNIQUE,
+    created       TEXT    NOT NULL,
+    air_date_iso_ TEXT    NOT NULL -- ISO 8601 date format of the `air_date`
 );
 
 CREATE INDEX episode_created_index ON episode (created);

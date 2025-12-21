@@ -133,8 +133,14 @@ def character():
                 id_ = result["id"]
                 origin_name = result["origin"]["name"]
                 origin_url = result["origin"]["url"].strip() or None
+                if origin_url is None:
+                    assert origin_name == 'unknown'
+                    origin_name = None
                 location_name = result["location"]["name"]
                 location_url = result["location"]["url"].strip() or None
+                if location_url is None:
+                    assert location_name == 'unknown'
+                    location_name = None
                 origin_id_ = origin_url.split("/")[-1] if origin_url is not None else None
                 location_id_ = location_url.split("/")[-1] if location_url is not None else None
                 episode = result["episode"]
