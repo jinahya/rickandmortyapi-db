@@ -124,6 +124,7 @@ WHERE c.origin_id_ IS NOT NULL
   AND l.id IS NULL
 ;
 
+
 -- -------------------------------------------------------------------------------------------------------- location_id_
 -- unmapped location - should be empty
 SELECT c.name, l.name
