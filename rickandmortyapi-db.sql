@@ -25,16 +25,16 @@ CREATE TABLE IF NOT EXISTS character
     species       TEXT NOT NULL,
     type          TEXT,
     gender        TEXT NOT NULL,
-    origin_name   TEXT NOT NULL, -- $.origin.name
-    origin_url    TEXT NULL,     -- $.origin.url
-    location_name TEXT NOT NULL, -- $.location.name
-    location_url  TEXT NULL,     -- $.location.url
+    origin_name   TEXT NULL, -- $.origin.name
+    origin_url    TEXT NULL, -- $.origin.url
+    location_name TEXT NULL, -- $.location.name
+    location_url  TEXT NULL, -- $.location.url
     image         TEXT NOT NULL UNIQUE,
     episode       TEXT NOT NULL,
     url           TEXT NOT NULL UNIQUE,
     created       TEXT NOT NULL,
-    origin_id_    INTEGER,       -- location.id for the $.origin.url
-    location_id_  INTEGER,       -- location.id for the $.location.url
+    origin_id_    INTEGER,   -- location.id for the $.origin.url
+    location_id_  INTEGER,   -- location.id for the $.location.url
     FOREIGN KEY (origin_id_) REFERENCES location (id),
     FOREIGN KEY (location_id_) REFERENCES location (id)
 );

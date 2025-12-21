@@ -69,15 +69,27 @@ GROUP BY origin_url
 ORDER BY count DESC
 ;
 
+-- should be empty
+SELECT *
+FROM character
+WHERE (origin_name IS NULL) != (origin_url IS NULL)
+;
+
+
 
 -- ------------------------------------------------------------------------------------------------------- location_name
 
--- ------------------------------------------------------------------------------------------------------- location_url
+-- -------------------------------------------------------------------------------------------------------- location_url
 SELECT location_url, COUNT(*) AS count
 FROM character
 GROUP BY location_url
 ORDER BY count DESC
 ;
+
+-- should be empty
+SELECT *
+FROM character
+WHERE (location_url IS NULL) != (location_name IS NULL);
 
 
 -- --------------------------------------------------------------------------------------------------------------- image

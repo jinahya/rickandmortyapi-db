@@ -21,6 +21,12 @@ $ ls -l rickandmortyapi.db
 $ sqlite3 rickandmortyapi.db ".schema"
 ```
 
+## Adjustment
+
+### character
+
+* When `$.location.name` is `unknown`, both `location_name` and `location_url` are `NULL`.
+
 ## Links
 
 ### github.com/afuh/rickandmortyapi
