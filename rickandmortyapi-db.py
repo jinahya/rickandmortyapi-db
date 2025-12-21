@@ -134,8 +134,6 @@ def character():
                 origin_name = result["origin"]["name"]
                 origin_url = result["origin"]["url"].strip() or None
                 if origin_url is None:
-                    if  origin_name != 'unknown':
-                        print(f"origin_url is None and origin_url: {origin_url}")
                     assert origin_name == 'unknown'
                     origin_name = None
                 location_name = result["location"]["name"]
@@ -143,7 +141,6 @@ def character():
                 if location_url is None:
                     assert location_name == 'unknown'
                     location_name = None
-                    print(f"location_url is None and location_url: {location_url}")
                 origin_id_ = origin_url.split("/")[-1] if origin_url is not None else None
                 location_id_ = location_url.split("/")[-1] if location_url is not None else None
                 episode = result["episode"]
