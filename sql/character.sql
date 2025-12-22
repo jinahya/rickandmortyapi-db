@@ -62,6 +62,7 @@ ORDER BY count DESC
 
 -- --------------------------------------------------------------------------------------------------------- origin_name
 
+
 -- ---------------------------------------------------------------------------------------------------------- origin_url
 SELECT origin_url, COUNT(*) AS count
 FROM character
@@ -69,15 +70,27 @@ GROUP BY origin_url
 ORDER BY count DESC
 ;
 
+-- should be empty
+SELECT *
+FROM character
+WHERE (origin_name IS NULL) != (origin_url IS NULL)
+;
+
 
 -- ------------------------------------------------------------------------------------------------------- location_name
 
--- ------------------------------------------------------------------------------------------------------- location_url
+
+-- -------------------------------------------------------------------------------------------------------- location_url
 SELECT location_url, COUNT(*) AS count
 FROM character
 GROUP BY location_url
 ORDER BY count DESC
 ;
+
+-- should be empty
+SELECT *
+FROM character
+WHERE (location_url IS NULL) != (location_name IS NULL);
 
 
 -- --------------------------------------------------------------------------------------------------------------- image
@@ -110,6 +123,7 @@ FROM character c
 WHERE c.origin_id_ IS NOT NULL
   AND l.id IS NULL
 ;
+
 
 -- -------------------------------------------------------------------------------------------------------- location_id_
 -- unmapped location - should be empty
