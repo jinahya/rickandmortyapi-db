@@ -31,28 +31,32 @@ def connect(operation: Callable[[sqlite3.Connection], Any]) -> Any:
 
 
 def create():
-    sql_file = "rickandmortyapi-db.sql"
+    # remove existing database file
     if os.path.exists(db_file):
         print(f"removing existing database file: '{db_file}'")
         os.remove(db_file)
-    connection = None
+    # open the DDL script
+    sql_file = "rickandmortyapi-db.sql"
     try:
         with open(sql_file, "r", encoding="utf-8") as f:
             sql_script = f.read()
-        connection = sqlite3.connect(db_file)
-        cursor = connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON")
-        print(f"new database '{db_file}' created and connected")
-        cursor.executescript(sql_script)
-        connection.commit()
-        print(f"successfully executed DDL script from '{sql_file}'")
-    except sqlite3.Error as e:
-        print(f"a database error occurred: {e}")
+        # execute the DDL script
+        connection = None
+        try:
+            connection = sqlite3.connect(db_file)
+            cursor = connection.cursor()
+            cursor.execute("PRAGMA foreign_keys=ON")
+            print(f"new database '{db_file}' created and connected")
+            cursor.executescript(sql_script)
+            connection.commit()
+            print(f"successfully executed DDL script from '{sql_file}'")
+        except sqlite3.Error as e:
+            print(f"a database error occurred: {e}")
+        finally:
+            if connection:
+                connection.close()
     except IOError as e:
         print(f"an error reading the SQL file occurred: {e}")
-    finally:
-        if connection:
-            connection.close()
 
 
 base_url = "https://rickandmortyapi.com/api"
@@ -60,12 +64,12 @@ base_url = "https://rickandmortyapi.com/api"
 
 def read(path, page=1):
     full_url = f"{base_url}{path}?page={page}"
-    # print(f"fetching {full_url}")
     try:
         response = requests.get(full_url)
         if response.status_code == 404:
             return None
-        response.raise_for_status()
+        assert response.status_code == 200
+        # response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"failed to read {full_url}: {e}")
@@ -110,8 +114,6 @@ def location():
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
-    except IOError as e:
-        print(f"an error reading the SQL file occurred: {e}")
     finally:
         if connection:
             connection.close()
@@ -184,8 +186,6 @@ def character():
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
-    except IOError as e:
-        print(f"an error reading the SQL file occurred: {e}")
     finally:
         if connection:
             connection.close()
@@ -236,8 +236,6 @@ def episode():
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
-    except IOError as e:
-        print(f"an error reading the SQL file occurred: {e}")
     finally:
         if connection:
             connection.close()
@@ -253,7 +251,7 @@ def location_resident():
                           FROM location
                           ORDER BY id ASC""")
         for each in cursor.fetchall():
-            id = each[0]
+            id_ = each[0]
             residents = each[1]
             if residents is None:
                 continue
@@ -263,13 +261,11 @@ def location_resident():
                 cursor.execute(
                     """INSERT INTO location_resident (location_id, resident_id)
                        VALUES (?, ?)""",
-                    (id, resident_id),
+                    (id_, resident_id),
                 )
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
-    except IOError as e:
-        print(f"an error reading the SQL file occurred: {e}")
     finally:
         if connection:
             connection.close()
@@ -300,8 +296,6 @@ def character_episode():
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
-    except IOError as e:
-        print(f"an error reading the SQL file occurred: {e}")
     finally:
         if connection:
             connection.close()
@@ -332,8 +326,6 @@ def episode_character():
         connection.commit()
     except sqlite3.Error as character_id:
         print(f"a database error occurred: {character_id}")
-    except IOError as character_id:
-        print(f"an error reading the SQL file occurred: {character_id}")
     finally:
         if connection:
             connection.close()
