@@ -16,6 +16,7 @@ CREATE INDEX location_type_index ON location (type);
 CREATE INDEX location_dimension_index ON location (dimension);
 CREATE INDEX location_created_index ON location (created);
 
+
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS character
 (
@@ -47,6 +48,7 @@ CREATE INDEX character_created_index ON character (created);
 CREATE INDEX character_origin_id__index ON character (origin_id_);
 CREATE INDEX character_location_id__index ON character (location_id_);
 
+
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS episode
 (
@@ -62,6 +64,7 @@ CREATE TABLE IF NOT EXISTS episode
 
 CREATE INDEX episode_created_index ON episode (created);
 CREATE INDEX episode_air_date_iso__index ON episode (air_date_iso_);
+
 
 -- ---------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS location_resident
