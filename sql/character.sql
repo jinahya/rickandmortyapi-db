@@ -126,7 +126,7 @@ WHERE c.origin_id_ IS NOT NULL
 
 
 -- -------------------------------------------------------------------------------------------------------- location_id_
--- unmapped location - should be empty
+-- location_id_ -> location.id
 SELECT c.name, l.name
 FROM character c
          JOIN location l ON c.location_id_ = l.id
@@ -134,10 +134,11 @@ WHERE c.origin_id_ IS NOT NULL
   AND l.id IS NULL
 ;
 
--- unmapped residents - should be empty
+-- location_id_ -> location_resident.(location_id, resident_id)
 SELECT c.id, c.location_id_, lr.location_id, lr.resident_id
 FROM character c
          LEFT OUTER JOIN location_resident lr ON c.location_id_ = lr.location_id AND c.id = lr.resident_id
-WHERE c.location_id_ IS NOT NULL
-  AND lr.resident_id IS NULL
+-- WHERE c.location_id_ IS NOT NULL
+--   AND lr.resident_id IS NULL
+WHERE (c.location_id_ IS NULL) <> (lr.resident_id IS NULL)
 ;
