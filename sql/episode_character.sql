@@ -84,6 +84,6 @@ HAVING COUNT(DISTINCT c.id) = 5
 SELECT *
 FROM episode_character ec
          LEFT OUTER JOIN character_episode ce ON ec.episode_id = ce.episode_id AND ec.character_id = ce.character_id
-WHERE ce.episode_id IS NULL
+WHERE ce.character_id IS NULL
 ;
 

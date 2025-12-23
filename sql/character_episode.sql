@@ -37,6 +37,6 @@ WHERE e.id IS NULL
 -- should be empty
 SELECT *
 FROM character_episode ce
-         LEFT OUTER JOIN episode_character ec ON ce.episode_id = ec.episode_id AND ce.character_id = ec.character_id
+         LEFT OUTER JOIN episode_character ec ON ce.character_id = ec.character_id AND ce.episode_id = ec.episode_id
 WHERE ec.episode_id IS NULL
 ;
