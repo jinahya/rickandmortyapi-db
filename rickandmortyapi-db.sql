@@ -81,11 +81,11 @@ CREATE TABLE IF NOT EXISTS location_resident
     location_id INTEGER NOT NULL, -- location$.id
     resident_id INTEGER NOT NULL, -- location$.residents[*].id
     PRIMARY KEY (location_id, resident_id),
-    UNIQUE (resident_id, location_id),
     FOREIGN KEY (location_id) REFERENCES location (id),
     FOREIGN KEY (resident_id) REFERENCES character (id)
 );
 
+CREATE INDEX location_resident_resident_id_index ON location_resident (resident_id);
 
 -- --------------------------------------------------------------------------------------------------- character_episode
 -- character$.episode
@@ -94,20 +94,22 @@ CREATE TABLE IF NOT EXISTS character_episode
     character_id INTEGER NOT NULL, -- character$.id
     episode_id   INTEGER NOT NULL, -- character$.episode[*].id
     PRIMARY KEY (character_id, episode_id),
-    UNIQUE (episode_id, character_id),
     FOREIGN KEY (character_id) REFERENCES character (id),
     FOREIGN KEY (episode_id) REFERENCES episode (id)
 );
 
+CREATE INDEX character_episode_episode_id_index ON character_episode (episode_id);
+
 
 -- --------------------------------------------------------------------------------------------------- episode_character
--- episode$.characters)
+-- episode$.characters
 CREATE TABLE IF NOT EXISTS episode_character
 (
     episode_id   INTEGER NOT NULL, -- episode$.id
     character_id INTEGER NOT NULL, -- episode$.characters[*].id
     PRIMARY KEY (episode_id, character_id),
-    UNIQUE (character_id, episode_id),
     FOREIGN KEY (episode_id) REFERENCES episode (id),
     FOREIGN KEY (character_id) REFERENCES character (id)
 );
+
+CREATE INDEX episode_character_character_id_index ON episode_character (character_id);
