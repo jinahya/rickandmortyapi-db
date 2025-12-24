@@ -66,10 +66,10 @@ def read(path, page=1):
     full_url = f"{base_url}{path}?page={page}"
     try:
         response = requests.get(full_url)
-        if response.status_code == 404:
+        if response.status_code == requests.codes.not_found:
             return None
-        assert response.status_code == 200
         # response.raise_for_status()
+        assert response.status_code == requests.codes.ok
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"failed to read {full_url}: {e}")
@@ -83,8 +83,9 @@ def location():
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
-        page = 1
+        page = 0
         while True:
+            page += 1
             response = read("/location", page)
             if response is None:
                 break
@@ -110,7 +111,6 @@ def location():
                         result["created"],
                     ),
                 )
-            page += 1
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
@@ -126,8 +126,9 @@ def character():
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
-        page = 1
+        page = 0
         while True:
+            page += 1
             response = read("/character", page)
             if response is None:
                 break
@@ -182,7 +183,6 @@ def character():
                         location_id_,
                     ),
                 )
-            page += 1
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
@@ -198,8 +198,9 @@ def episode():
         connection = sqlite3.connect(db_file)
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
-        page = 1
+        page = 0
         while True:
+            page += 1
             response = read("/episode", page)
             if response is None:
                 break
@@ -232,7 +233,6 @@ def episode():
                         air_date_iso_,
                     ),
                 )
-            page += 1
         connection.commit()
     except sqlite3.Error as e:
         print(f"a database error occurred: {e}")
@@ -281,7 +281,7 @@ def character_episode():
                           FROM character
                           ORDER BY id ASC""")
         for each in cursor.fetchall():
-            id = each[0]
+            id_ = each[0]
             episode = each[1]
             if episode is None:
                 continue
@@ -291,7 +291,7 @@ def character_episode():
                 cursor.execute(
                     """INSERT INTO character_episode (character_id, episode_id)
                        VALUES (?, ?)""",
-                    (id, episode_id),
+                    (id_, episode_id),
                 )
         connection.commit()
     except sqlite3.Error as e:
@@ -324,8 +324,8 @@ def episode_character():
                     (id_, character_id),
                 )
         connection.commit()
-    except sqlite3.Error as character_id:
-        print(f"a database error occurred: {character_id}")
+    except sqlite3.Error as e:
+        print(f"a database error occurred: {e}")
     finally:
         if connection:
             connection.close()
