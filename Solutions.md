@@ -1,6 +1,6 @@
 # SQL Solutions
 
-## Caveats
+## Disclaimer
 
 The content of this document has been generated using LLM (Large Language Model) functionality.
 
