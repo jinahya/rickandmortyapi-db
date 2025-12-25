@@ -1,18 +1,14 @@
-# SQL Solutions
+# Problems and Solutions
+
+This document provides various SQL solutions for common queries against the Rick and Morty database. These examples are designed to demonstrate standard SQL patterns like JOINS, Aggregations, and filtering using the `HAVING` clause.
+
+이 문서는 Rick and Morty 데이터베이스에 대한 일반적인 쿼리에 대한 다양한 SQL 솔루션을 제공합니다. 이 예제들은 JOINS, 집계(Aggregations), 그리고 `HAVING` 절을 사용한 필터링과 같은 표준 SQL 패턴을 보여주기 위해 설계되었습니다.
 
 ## Disclaimer
 
 This document was authored with the assistance of Large Language Model (LLM) technology.
 
 이 문서는 대규모 언어 모델(LLM) 기술의 도움을 받아 작성되었습니다.
-
-— Junie
-
-## Abstract
-
-This document provides various SQL solutions for common queries against the Rick and Morty database. These examples are designed to demonstrate standard SQL patterns like JOINS, Aggregations, and filtering using the `HAVING` clause.
-
-이 문서는 Rick and Morty 데이터베이스에 대한 일반적인 쿼리에 대한 다양한 SQL 솔루션을 제공합니다. 이 예제들은 JOINS, 집계(Aggregations), 그리고 `HAVING` 절을 사용한 필터링과 같은 표준 SQL 패턴을 보여주기 위해 설계되었습니다.
 
 ## Find characters who appeared in all specified episodes
 
