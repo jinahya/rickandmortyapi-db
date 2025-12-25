@@ -4,6 +4,8 @@
 
 The content of this document has been generated using LLM (Large Language Model) functionality.
 
+이 문서의 내용은 LLM(대규모 언어 모델) 기능을 사용하여 생성되었습니다.
+
 — Junie
 
 This document provides various SQL solutions for common queries against the Rick and Morty database. These examples are designed to demonstrate standard SQL patterns like JOINS, Aggregations, and filtering using the `HAVING` clause.
