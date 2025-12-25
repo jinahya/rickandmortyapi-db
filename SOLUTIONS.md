@@ -1,4 +1,4 @@
-# Problems and Solutions
+# SOLUTIONS
 
 This document provides various SQL solutions for common queries against the Rick and Morty database. These examples are designed to demonstrate standard SQL patterns like JOINS, Aggregations, and filtering using the `HAVING` clause.
 
