@@ -2,9 +2,9 @@
 
 ## Disclaimer
 
-The content of this document has been generated using LLM (Large Language Model) functionality.
+This document was authored with the assistance of Large Language Model (LLM) technology.
 
-이 문서의 내용은 LLM(대규모 언어 모델) 기능을 사용하여 생성되었습니다.
+이 문서는 대규모 언어 모델(LLM) 기술의 도움을 받아 작성되었습니다.
 
 — Junie
 
