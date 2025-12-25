@@ -11,9 +11,9 @@ This query finds characters that have appeared in a specific set of episodes. It
 SELECT c.*
 FROM character c
          JOIN character_episode ce ON c.id = ce.character_id
-WHERE ce.episode_id IN (10, 22, 51) -- Filter for specific episode IDs
-GROUP BY c.id                       -- Group by character to aggregate their appearances
-HAVING COUNT(DISTINCT ce.episode_id) = 3 -- Ensure they appear in all 3 episodes
+WHERE ce.episode_id IN (10, 22, 51)                -- Filter for specific episode IDs
+GROUP BY c.id                                      -- Group by character to aggregate their appearances
+HAVING COUNT(DISTINCT ce.episode_id) = 3           -- Ensure they appear in all 3 episodes
 ORDER BY c.id ASC
 ;
 --   1  Rick Sanchez
@@ -32,9 +32,9 @@ ORDER BY c.id ASC
 SELECT c.*
 FROM character_episode ce
          JOIN character c ON c.id = ce.character_id
-WHERE ce.episode_id IN (10, 22, 51) -- Filter for specific episode IDs
-GROUP BY ce.character_id            -- Group by character ID
-HAVING COUNT(DISTINCT ce.episode_id) = 3 -- Ensure they appear in all 3 episodes
+WHERE ce.episode_id IN (10, 22, 51)                -- Filter for specific episode IDs
+GROUP BY ce.character_id                           -- Group by character ID
+HAVING COUNT(DISTINCT ce.episode_id) = 3           -- Ensure they appear in all 3 episodes
 ORDER BY ce.character_id ASC
 ;
 --   1  Rick Sanchez
@@ -57,9 +57,9 @@ Similar to the previous query, this finds episodes where a specific group of cha
 SELECT e.*
 FROM episode e
          JOIN character_episode ce ON e.id = ce.episode_id
-WHERE ce.character_id IN (1, 2, 3, 4, 5) -- Filter for specific character IDs
-GROUP BY e.id                            -- Group by episode to count characters
-HAVING COUNT(DISTINCT ce.character_id) = 5 -- Match the total number of characters (5)
+WHERE ce.character_id IN (1, 2, 3, 4, 5)           -- Filter for specific character IDs
+GROUP BY e.id                                      -- Group by episode to count characters
+HAVING COUNT(DISTINCT ce.character_id) = 5         -- Match the total number of characters (5)
 ORDER BY e.id ASC
 ;
 --  6  Rick Potion #9
@@ -106,9 +106,9 @@ ORDER BY e.id ASC
 SELECT e.*
 FROM character_episode ce
          JOIN episode e ON e.id = ce.episode_id
-WHERE ce.character_id IN (1, 2, 3, 4, 5) -- Filter for characters
-GROUP BY ce.episode_id                   -- Group by episode ID
-HAVING COUNT(DISTINCT ce.character_id) = 5 -- Ensure all 5 characters are present
+WHERE ce.character_id IN (1, 2, 3, 4, 5)           -- Filter for characters
+GROUP BY ce.episode_id                             -- Group by episode ID
+HAVING COUNT(DISTINCT ce.character_id) = 5         -- Ensure all 5 characters are present
 ORDER BY ce.episode_id ASC
 ;
 --  6  Rick Potion #9
@@ -158,9 +158,9 @@ These queries rank locations based on how many characters originated there. We u
 -- Variation 1: Starting from location
 SELECT l.*, COUNT(c.id) AS character_count
 FROM location l
-         JOIN character c ON l.id = c.origin_id_ -- Join on the origin location foreign key
-GROUP BY l.id                                   -- Group by location to get counts per place
-ORDER BY character_count DESC                   -- Order by the highest count first
+         JOIN character c ON l.id = c.origin_id_   -- Join on the origin location foreign key
+GROUP BY l.id                                      -- Group by location to get counts per place
+ORDER BY character_count DESC                      -- Order by the highest count first
 ;
 --  20  Earth (Replacement Dimension)  155
 --   1  Earth (C-137)                   33
@@ -178,9 +178,9 @@ ORDER BY character_count DESC                   -- Order by the highest count fi
 -- Variation 2: Starting from character
 SELECT l.*, COUNT(c.id) AS character_count
 FROM character c
-         JOIN location l ON c.origin_id_ = l.id -- Join with location details
-GROUP BY l.id                                   -- Group by location
-ORDER BY character_count DESC                   -- Order by count
+         JOIN location l ON c.origin_id_ = l.id    -- Join with location details
+GROUP BY l.id                                      -- Group by location
+ORDER BY character_count DESC                      -- Order by count
 ;
 --  20  Earth (Replacement Dimension)  155
 --   1  Earth (C-137)                   33
@@ -202,7 +202,7 @@ These queries rank locations based on where characters were most recently locate
 -- Variation 1: Starting from location
 SELECT l.*, COUNT(c.id) AS character_count
 FROM location l
-         JOIN character c ON l.id = c.location_id_ -- Join on current location foreign key
+         JOIN character c ON l.id = c.location_id_  -- Join on current location foreign key
 GROUP BY l.id                                      -- Group by location
 ORDER BY character_count DESC                      -- Order by highest count
 ;
@@ -222,9 +222,9 @@ ORDER BY character_count DESC                      -- Order by highest count
 -- Variation 2: Starting from character
 SELECT l.*, COUNT(c.id) AS character_count
 FROM character c
-         JOIN location l ON c.location_id_ = l.id -- Join with location table
-GROUP BY l.id                                     -- Group results by location
-ORDER BY character_count DESC                     -- Sort by popularity
+         JOIN location l ON c.location_id_ = l.id  -- Join with location table
+GROUP BY l.id                                      -- Group results by location
+ORDER BY character_count DESC                      -- Sort by popularity
 ;
 --  20  Earth (Replacement Dimension)  230
 --   3  Citadel of Ricks               101
