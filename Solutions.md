@@ -1,14 +1,19 @@
-# Solutions
+# SQL Solutions
+
+This document provides various SQL solutions for common queries against the Rick and Morty database. These examples are designed to demonstrate standard SQL patterns like JOINS, Aggregations, and filtering using the `HAVING` clause.
 
 ## Find characters who appeared in all specified episodes
 
+This query finds characters that have appeared in a specific set of episodes. It uses a technique often called "Relational Division": we filter for the desired episodes, group by character, and then ensure the number of unique episodes found matches the total number of episodes in our input set.
+
 ```sqlite
+-- Variation 1: Starting from the character table
 SELECT c.*
 FROM character c
          JOIN character_episode ce ON c.id = ce.character_id
-WHERE ce.episode_id IN (10, 22, 51)
-GROUP BY c.id
-HAVING COUNT(DISTINCT ce.episode_id) = 3
+WHERE ce.episode_id IN (10, 22, 51) -- Filter for specific episode IDs
+GROUP BY c.id                       -- Group by character to aggregate their appearances
+HAVING COUNT(DISTINCT ce.episode_id) = 3 -- Ensure they appear in all 3 episodes
 ORDER BY c.id ASC
 ;
 --   1  Rick Sanchez
@@ -23,12 +28,13 @@ ORDER BY c.id ASC
 ```
 
 ```sqlite
+-- Variation 2: Starting from the mapping table
 SELECT c.*
 FROM character_episode ce
          JOIN character c ON c.id = ce.character_id
-WHERE ce.episode_id IN (10, 22, 51)
-GROUP BY ce.character_id
-HAVING COUNT(DISTINCT ce.episode_id) = 3
+WHERE ce.episode_id IN (10, 22, 51) -- Filter for specific episode IDs
+GROUP BY ce.character_id            -- Group by character ID
+HAVING COUNT(DISTINCT ce.episode_id) = 3 -- Ensure they appear in all 3 episodes
 ORDER BY ce.character_id ASC
 ;
 --   1  Rick Sanchez
@@ -44,13 +50,16 @@ ORDER BY ce.character_id ASC
 
 ## Find episodes in which all specified characters appeared together
 
+Similar to the previous query, this finds episodes where a specific group of characters all appeared. We filter for the character IDs, group by episode, and check if the count of unique characters in that episode matches our input set size.
+
 ```sqlite
+-- Variation 1: Joining from episode to the mapping table
 SELECT e.*
 FROM episode e
          JOIN character_episode ce ON e.id = ce.episode_id
-WHERE ce.character_id IN (1, 2, 3, 4, 5)
-GROUP BY e.id
-HAVING COUNT(DISTINCT ce.character_id) = 5
+WHERE ce.character_id IN (1, 2, 3, 4, 5) -- Filter for specific character IDs
+GROUP BY e.id                            -- Group by episode to count characters
+HAVING COUNT(DISTINCT ce.character_id) = 5 -- Match the total number of characters (5)
 ORDER BY e.id ASC
 ;
 --  6  Rick Potion #9
@@ -93,12 +102,13 @@ ORDER BY e.id ASC
 ```
 
 ```sqlite
+-- Variation 2: Joining from the mapping table to episode
 SELECT e.*
 FROM character_episode ce
          JOIN episode e ON e.id = ce.episode_id
-WHERE ce.character_id IN (1, 2, 3, 4, 5)
-GROUP BY ce.episode_id
-HAVING COUNT(DISTINCT ce.character_id) = 5
+WHERE ce.character_id IN (1, 2, 3, 4, 5) -- Filter for characters
+GROUP BY ce.episode_id                   -- Group by episode ID
+HAVING COUNT(DISTINCT ce.character_id) = 5 -- Ensure all 5 characters are present
 ORDER BY ce.episode_id ASC
 ;
 --  6  Rick Potion #9
@@ -142,12 +152,15 @@ ORDER BY ce.episode_id ASC
 
 ## Find locations order by the number of characters who have been first seen
 
+These queries rank locations based on how many characters originated there. We use `GROUP BY` on the location ID and `COUNT()` to aggregate the characters.
+
 ```sqlite
+-- Variation 1: Starting from location
 SELECT l.*, COUNT(c.id) AS character_count
 FROM location l
-         JOIN character c ON l.id = c.origin_id_
-GROUP BY l.id
-ORDER BY character_count DESC
+         JOIN character c ON l.id = c.origin_id_ -- Join on the origin location foreign key
+GROUP BY l.id                                   -- Group by location to get counts per place
+ORDER BY character_count DESC                   -- Order by the highest count first
 ;
 --  20  Earth (Replacement Dimension)  155
 --   1  Earth (C-137)                   33
@@ -162,11 +175,12 @@ ORDER BY character_count DESC
 ```
 
 ```sqlite
+-- Variation 2: Starting from character
 SELECT l.*, COUNT(c.id) AS character_count
 FROM character c
-         JOIN location l ON c.origin_id_ = l.id
-GROUP BY l.id
-ORDER BY character_count DESC
+         JOIN location l ON c.origin_id_ = l.id -- Join with location details
+GROUP BY l.id                                   -- Group by location
+ORDER BY character_count DESC                   -- Order by count
 ;
 --  20  Earth (Replacement Dimension)  155
 --   1  Earth (C-137)                   33
@@ -182,12 +196,15 @@ ORDER BY character_count DESC
 
 ## Find locations order by the number of characters who have been last seen
 
+These queries rank locations based on where characters were most recently located (their current `location_id_`).
+
 ```sqlite
+-- Variation 1: Starting from location
 SELECT l.*, COUNT(c.id) AS character_count
 FROM location l
-         JOIN character c ON l.id = c.location_id_
-GROUP BY l.id
-ORDER BY character_count DESC
+         JOIN character c ON l.id = c.location_id_ -- Join on current location foreign key
+GROUP BY l.id                                      -- Group by location
+ORDER BY character_count DESC                      -- Order by highest count
 ;
 --  20  Earth (Replacement Dimension)  230
 --   3  Citadel of Ricks               101
@@ -202,11 +219,12 @@ ORDER BY character_count DESC
 ```
 
 ```sqlite
+-- Variation 2: Starting from character
 SELECT l.*, COUNT(c.id) AS character_count
 FROM character c
-         JOIN location l ON c.location_id_ = l.id
-GROUP BY l.id
-ORDER BY character_count DESC
+         JOIN location l ON c.location_id_ = l.id -- Join with location table
+GROUP BY l.id                                     -- Group results by location
+ORDER BY character_count DESC                     -- Sort by popularity
 ;
 --  20  Earth (Replacement Dimension)  230
 --   3  Citadel of Ricks               101
