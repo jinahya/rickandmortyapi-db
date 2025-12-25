@@ -4,6 +4,8 @@
 
 Generates an SQLite database from [The Rick and Morty API](https://rickandmortyapi.com).
 
+[The Rick and Morty API](https://rickandmortyapi.com)로부터 SQLite 데이터베이스를 생성합니다.
+
 See
 
 * [rickandmortyapi-persistence](https://github.com/jinahya/rickandmortyapi-persistence)
