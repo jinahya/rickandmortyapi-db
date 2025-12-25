@@ -57,8 +57,8 @@ Similar to the previous query, this finds episodes where a specific group of cha
 SELECT e.*
 FROM episode e
          JOIN character_episode ce ON e.id = ce.episode_id
-WHERE ce.character_id IN (1, 2, 3, 4, 5)  -- Filter for specific character IDs
-GROUP BY e.id                             -- Group by episode to count characters
+WHERE ce.character_id IN (1, 2, 3, 4, 5)   -- Filter for specific character IDs
+GROUP BY e.id                              -- Group by episode to count characters
 HAVING COUNT(DISTINCT ce.character_id) = 5 -- Match the total number of characters (5)
 ORDER BY e.id ASC
 ;
@@ -106,8 +106,8 @@ ORDER BY e.id ASC
 SELECT e.*
 FROM character_episode ce
          JOIN episode e ON e.id = ce.episode_id
-WHERE ce.character_id IN (1, 2, 3, 4, 5)  -- Filter for characters
-GROUP BY ce.episode_id                    -- Group by episode ID
+WHERE ce.character_id IN (1, 2, 3, 4, 5)   -- Filter for characters
+GROUP BY ce.episode_id                     -- Group by episode ID
 HAVING COUNT(DISTINCT ce.character_id) = 5 -- Ensure all 5 characters are present
 ORDER BY ce.episode_id ASC
 ;
@@ -159,8 +159,8 @@ These queries rank locations based on how many characters originated there. We u
 SELECT l.*, COUNT(c.id) AS character_count
 FROM location l
          JOIN character c ON l.id = c.origin_id_ -- Join on the origin location foreign key
-GROUP BY l.id                                   -- Group by location to get counts per place
-ORDER BY character_count DESC                   -- Order by the highest count first
+GROUP BY l.id                                    -- Group by location to get counts per place
+ORDER BY character_count DESC                    -- Order by the highest count first
 ;
 --  20  Earth (Replacement Dimension)  155
 --   1  Earth (C-137)                   33
@@ -179,8 +179,8 @@ ORDER BY character_count DESC                   -- Order by the highest count fi
 SELECT l.*, COUNT(c.id) AS character_count
 FROM character c
          JOIN location l ON c.origin_id_ = l.id -- Join with location details
-GROUP BY l.id                                  -- Group by location
-ORDER BY character_count DESC                  -- Order by count
+GROUP BY l.id                                   -- Group by location
+ORDER BY character_count DESC                   -- Order by count
 ;
 --  20  Earth (Replacement Dimension)  155
 --   1  Earth (C-137)                   33
@@ -203,8 +203,8 @@ These queries rank locations based on where characters were most recently locate
 SELECT l.*, COUNT(c.id) AS character_count
 FROM location l
          JOIN character c ON l.id = c.location_id_ -- Join on current location foreign key
-GROUP BY l.id                                     -- Group by location
-ORDER BY character_count DESC                     -- Order by highest count
+GROUP BY l.id                                      -- Group by location
+ORDER BY character_count DESC                      -- Order by highest count
 ;
 --  20  Earth (Replacement Dimension)  230
 --   3  Citadel of Ricks               101
