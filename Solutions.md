@@ -2,9 +2,13 @@
 
 This document provides various SQL solutions for common queries against the Rick and Morty database. These examples are designed to demonstrate standard SQL patterns like JOINS, Aggregations, and filtering using the `HAVING` clause.
 
+이 문서는 Rick and Morty 데이터베이스에 대한 일반적인 쿼리에 대한 다양한 SQL 솔루션을 제공합니다. 이 예제들은 JOINS, 집계(Aggregations), 그리고 `HAVING` 절을 사용한 필터링과 같은 표준 SQL 패턴을 보여주기 위해 설계되었습니다.
+
 ## Find characters who appeared in all specified episodes
 
 This query finds characters that have appeared in a specific set of episodes. It uses a technique often called "Relational Division": we filter for the desired episodes, group by character, and then ensure the number of unique episodes found matches the total number of episodes in our input set.
+
+이 쿼리는 특정 에피소드 세트에 모두 등장한 캐릭터를 찾습니다. 이는 흔히 "관계 대수 나누기(Relational Division)"라고 불리는 기술을 사용합니다: 원하는 에피소드들을 필터링하고, 캐릭터별로 그룹화한 다음, 발견된 고유 에피소드의 수가 입력된 세트의 총 에피소드 수와 일치하는지 확인합니다.
 
 ```sqlite
 -- Variation 1: Starting from the character table
@@ -51,6 +55,8 @@ ORDER BY ce.character_id ASC
 ## Find episodes in which all specified characters appeared together
 
 Similar to the previous query, this finds episodes where a specific group of characters all appeared. We filter for the character IDs, group by episode, and check if the count of unique characters in that episode matches our input set size.
+
+이전 쿼리와 마찬가지로, 이 쿼리는 특정 캐릭터 그룹이 모두 함께 등장한 에피소드를 찾습니다. 캐릭터 ID를 필터링하고, 에피소드별로 그룹화한 다음, 해당 에피소드의 고유 캐릭터 수가 입력된 세트의 크기와 일치하는지 확인합니다.
 
 ```sqlite
 -- Variation 1: Joining from episode to the mapping table
@@ -154,6 +160,8 @@ ORDER BY ce.episode_id ASC
 
 These queries rank locations based on how many characters originated there. We use `GROUP BY` on the location ID and `COUNT()` to aggregate the characters.
 
+이 쿼리들은 얼마나 많은 캐릭터가 해당 장소에서 기원했는지를 기준으로 위치의 순위를 매깁니다. 위치 ID에 `GROUP BY`를 사용하고 `COUNT()`를 사용하여 캐릭터를 집계합니다.
+
 ```sqlite
 -- Variation 1: Starting from location
 SELECT l.*, COUNT(c.id) AS character_count
@@ -197,6 +205,8 @@ ORDER BY character_count DESC                   -- Order by count
 ## Find locations order by the number of characters who have been last seen
 
 These queries rank locations based on where characters were most recently located (their current `location_id_`).
+
+이 쿼리들은 캐릭터들이 가장 최근에 위치했던 곳(현재의 `location_id_`)을 기준으로 위치의 순위를 매깁니다.
 
 ```sqlite
 -- Variation 1: Starting from location
