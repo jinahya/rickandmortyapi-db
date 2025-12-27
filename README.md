@@ -76,6 +76,22 @@ $ ls -l rickandmortyapi.db
 $ sqlite3 rickandmortyapi.db ".schema"
 ```
 
+### 5. Generate Documentation / 문서 생성
+
+You can generate documentation using the built-in `pydoc` module.
+
+`pydoc` 모듈을 사용하여 문서를 생성할 수 있습니다.
+
+```shell
+# View documentation in the terminal
+# 터미널에서 문서 보기
+$ python3 -m pydoc rickandmortyapi-db
+
+# Generate HTML documentation
+# HTML 문서 생성
+$ python3 -m pydoc -w rickandmortyapi-db
+```
+
 ## Adjustment
 
 ### character
