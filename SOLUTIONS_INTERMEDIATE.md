@@ -105,7 +105,7 @@ SELECT e.id,
 FROM episode e
          JOIN character_episode ce ON e.id = ce.episode_id
 GROUP BY e.id
-ORDER BY character_count DESC
+ORDER BY character_count DESC, e.id ASC
 ;
 ```
 

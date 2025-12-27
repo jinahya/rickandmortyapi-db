@@ -19,6 +19,10 @@ pip3 install -r requirements.txt
 echo "Generating the database..."
 python3 rickandmortyapi-db.py
 
+# Generate HTML documentation / HTML 문서 생성
+echo "Generating HTML documentation..."
+python3 -m pydoc -w rickandmortyapi-db
+
 # Update the rickandmortyapi.db.dbhash / 해시 파일 업데이트
 echo "Updating hash file..."
 if command -v dbhash >/dev/null 2>&1; then
