@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS character
     episode       TEXT    NOT NULL,             -- $.episode
     url           TEXT    NOT NULL UNIQUE,      -- $.url
     created       TEXT    NOT NULL,             -- $.created
-    origin_id_    INTEGER NULL,                 -- location.id for the $.origin.url
-    location_id_  INTEGER NULL,                 -- location.id for the $.location.url
+    origin_id_    INTEGER NULL,                 -- location.id mapped by $.origin.url
+    location_id_  INTEGER NULL,                 -- location.id mapped by $.location.url
     FOREIGN KEY (origin_id_) REFERENCES location (id),
     FOREIGN KEY (location_id_) REFERENCES location (id)
 );
@@ -75,39 +75,41 @@ CREATE INDEX episode_air_date_iso__index ON episode (air_date_iso_);
 
 
 -- --------------------------------------------------------------------------------------------------- location_resident
--- location$.resident
+-- /api/location
 CREATE TABLE IF NOT EXISTS location_resident
 (
-    location_id INTEGER NOT NULL, -- location$.id
-    resident_id INTEGER NOT NULL, -- location$.residents[*].id
+    location_id INTEGER NOT NULL, -- $.id
+    resident_id INTEGER NOT NULL, -- character.id mapped by $.residents[*].id
     PRIMARY KEY (location_id, resident_id),
-    UNIQUE (resident_id, location_id),
     FOREIGN KEY (location_id) REFERENCES location (id),
     FOREIGN KEY (resident_id) REFERENCES character (id)
 );
 
+CREATE INDEX location_resident_resident_id_index ON location_resident (resident_id);
 
 -- --------------------------------------------------------------------------------------------------- character_episode
--- character$.episode
+-- /api/character
 CREATE TABLE IF NOT EXISTS character_episode
 (
-    character_id INTEGER NOT NULL, -- character$.id
-    episode_id   INTEGER NOT NULL, -- character$.episode[*].id
+    character_id INTEGER NOT NULL, -- $.id
+    episode_id   INTEGER NOT NULL, -- episode.id mapped by $.episode[*].id
     PRIMARY KEY (character_id, episode_id),
-    UNIQUE (episode_id, character_id),
     FOREIGN KEY (character_id) REFERENCES character (id),
     FOREIGN KEY (episode_id) REFERENCES episode (id)
 );
 
+CREATE INDEX character_episode_episode_id_index ON character_episode (episode_id);
+
 
 -- --------------------------------------------------------------------------------------------------- episode_character
--- episode$.characters)
+-- /api/episode
 CREATE TABLE IF NOT EXISTS episode_character
 (
-    episode_id   INTEGER NOT NULL, -- episode$.id
-    character_id INTEGER NOT NULL, -- episode$.characters[*].id
+    episode_id   INTEGER NOT NULL, -- $.id
+    character_id INTEGER NOT NULL, -- $.characters[*].id
     PRIMARY KEY (episode_id, character_id),
-    UNIQUE (character_id, episode_id),
     FOREIGN KEY (episode_id) REFERENCES episode (id),
     FOREIGN KEY (character_id) REFERENCES character (id)
 );
+
+CREATE INDEX episode_character_character_id_index ON episode_character (character_id);

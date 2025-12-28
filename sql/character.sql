@@ -62,8 +62,23 @@ ORDER BY count DESC
 
 -- --------------------------------------------------------------------------------------------------------- origin_name
 
-
 -- ---------------------------------------------------------------------------------------------------------- origin_url
+-- should be empty
+SELECT c.origin_url, l.url
+FROM character c
+         LEFT OUTER JOIN location l ON c.origin_url = l.url
+WHERE c.origin_url IS NOT NULL
+  AND l.url IS NULL
+;
+
+-- should be empty
+SELECT c.origin_name, c.origin_url, l.name, l.url
+FROM character c
+         LEFT OUTER JOIN location l ON c.origin_url = l.url AND c.origin_name = l.name
+WHERE c.origin_url IS NOT NULL
+  AND c.origin_url IS NULL
+;
+
 SELECT origin_url, COUNT(*) AS count
 FROM character
 GROUP BY origin_url
@@ -81,6 +96,22 @@ WHERE (origin_name IS NULL) != (origin_url IS NULL)
 
 
 -- -------------------------------------------------------------------------------------------------------- location_url
+-- should be empty
+SELECT c.location_url, l.url
+FROM character c
+         LEFT OUTER JOIN location l ON c.location_url = l.url
+WHERE c.location_url IS NOT NULL
+  AND l.url IS NULL
+;
+
+-- should be empty
+SELECT c.location_name, c.location_url, l.name, l.url
+FROM character c
+         LEFT OUTER JOIN location l ON c.location_url = l.url AND c.location_name = l.name
+WHERE c.location_url IS NOT NULL
+  AND c.location_url IS NULL
+;
+
 SELECT location_url, COUNT(*) AS count
 FROM character
 GROUP BY location_url

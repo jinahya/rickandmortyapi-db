@@ -26,6 +26,15 @@ HAVING character_count > 1
 ORDER BY character_count DESC
 ;
 
+-- given episodes, find characters have been seen all episodes
+SELECT c.*
+FROM character_episode ce
+         JOIN character c ON c.id = ce.character_id
+WHERE ce.episode_id IN (1, 2, 38, 175, 338)
+GROUP BY ce.character_id
+HAVING COUNT(DISTINCT ce.episode_id) = 5
+;
+
 EXPLAIN QUERY PLAN
 SELECT ce.episode_id, e.id
 FROM character_episode ce
@@ -37,6 +46,32 @@ WHERE e.id IS NULL
 -- should be empty
 SELECT *
 FROM character_episode ce
-         LEFT OUTER JOIN episode_character ec ON ce.episode_id = ec.episode_id AND ce.character_id = ec.character_id
+         LEFT OUTER JOIN episode_character ec ON ce.character_id = ec.character_id AND ce.episode_id = ec.episode_id
 WHERE ec.episode_id IS NULL
+;
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
+
+-- 1: Rick Sanchez
+-- 2: Morty Smith
+-- 3: Summer Smith
+-- 4: Beth Smith
+-- 5: Jerry Smith
+
+
+-- given episodes, find characters have been seen all episodes
+SELECT c.*
+FROM character c
+         JOIN character_episode ce ON c.id = ce.character_id
+WHERE ce.episode_id IN (1, 2, 38, 175, 338)
+GROUP BY c.id, c.name
+HAVING COUNT(DISTINCT ce.episode_id) = 5
+;
+
+SELECT character_id
+FROM character_episode
+WHERE episode_id IN (1, 2, 38, 175, 338)
+GROUP BY character_id
+HAVING COUNT(DISTINCT episode_id) = 5
 ;
