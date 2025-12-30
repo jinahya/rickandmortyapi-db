@@ -175,10 +175,9 @@ FROM character c
          JOIN character_episode ce ON c.id = ce.character_id
          JOIN episode e ON ce.episode_id = e.id
 GROUP BY c.id
-HAVING COUNT(DISTINCT SUBSTR(e.episode, 1, 3)) = (
-    SELECT COUNT(DISTINCT SUBSTR(episode, 1, 3))
-    FROM episode
-)
+HAVING COUNT(DISTINCT SUBSTR(e.episode, 1, 3))
+           = (SELECT COUNT(DISTINCT SUBSTR(episode, 1, 3))
+              FROM episode)
 ORDER BY c.id ASC
 ;
 ```
